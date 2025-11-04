@@ -214,12 +214,22 @@ function checkSundayUnlock() {
 }
 setInterval(checkSundayUnlock, 60000);
 
-function key(d) { return `workout_${d}`; }
 function getSlots(d) { 
     const dateObj = new Date(d);
     const dayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dateObj.getDay()];
-    const satDays = ['Sat', 'Sun'];
-    return satDays.includes(dayName) ? SAT_SLOTS : NORMAL_SLOTS;
+
+    // Ensure Mon, Wed, Fri use NORMAL_SLOTS
+    if (['Mon', 'Wed', 'Fri'].includes(dayName)) {
+        return NORMAL_SLOTS;
+    }
+
+    // Sat and Sun use SAT_SLOTS
+    if (['Sat', 'Sun'].includes(dayName)) {
+        return SAT_SLOTS;
+    }
+
+    // Default to NORMAL_SLOTS for other weekdays (Tue, Thu)
+    return NORMAL_SLOTS;
 }
 function initDay(d) {
     if (localStorage.getItem(key(d))) return;
@@ -465,4 +475,5 @@ window.onload = () => {
 </script>
 
 </body>
+
 </html>
